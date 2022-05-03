@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package com.ndgndg91.grpc.stub.user;
+
+option java_multiple_files = true;
+option java_package = "com.ndgndg91.grpc.stub.user";
+
+service UserService {
+  rpc create(CreateUserRequest) returns (UserId) {}
+  rpc findById(UserId) returns (User) {}
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string fullName = 2;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string fullName = 3;
+  uint64 createdAt = 4;
+}
