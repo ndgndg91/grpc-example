@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     implementation(project(":user-stub"))
-//    project(":product-stub")
+    implementation(project(":product-stub"))
     implementation("net.devh:grpc-server-spring-boot-starter:2.13.1.RELEASE")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
