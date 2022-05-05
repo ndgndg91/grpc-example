@@ -38,7 +38,7 @@ $ grpcurl --plaintext -d '{"email": "ndgndg91@gmail.com", "fullName": "Nam Dong 
 }
 </pre>
 
-<h2> call findById</h2>
+<h2> call findById user</h2>
 <pre>
 $ grpcurl --plaintext -d '{"id": "332b1d8a-574a-4b8f-ab66-1031092ea068"}' localhost:9090 com.ndgndg91.grpc.stub.user.UserService.findById
 {
@@ -47,5 +47,25 @@ $ grpcurl --plaintext -d '{"id": "332b1d8a-574a-4b8f-ab66-1031092ea068"}' localh
   "fullName": "Nam Dong Gil",
   "createdAt": "1651706027"
 }
-
 </pre>
+
+<h2>call create product</h2>
+<pre>
+grpcurl --plaintext -d '{"name": "T-SHIRT", "description": "nice T", "price": 150005000}' localhost:9090 com.ndgndg91.grpc.stub.product.ProductService.createProduct
+{
+  "id": "51c61500-7970-4731-b634-5dbe7ef961fc"
+}
+</pre>
+
+<h2>call findById product</h2>
+<pre>
+grpcurl --plaintext -d '{"id": "51c61500-7970-4731-b634-5dbe7ef961fc"}' localhost:9090 com.ndgndg91.grpc.stub.product.ProductService.findById
+{
+  "id": "51c61500-7970-4731-b634-5dbe7ef961fc",
+  "name": "T-SHIRT",
+  "description": "nice T",
+  "price": "150005000",
+  "createdAt": "1651770324"
+}
+</pre>
+
