@@ -7,8 +7,8 @@ option java_package = "com.ndgndg91.grpc.stub.product";
 
 
 service ProductService {
-  rpc addProduct(CreateProductRequest) returns (ProductID);
-  rpc getProduct(ProductID) returns (Product);
+  rpc createProduct(CreateProductRequest) returns (ProductID);
+  rpc findById(ProductID) returns (Product);
 }
 
 message CreateProductRequest {

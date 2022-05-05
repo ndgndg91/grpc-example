@@ -33,8 +33,7 @@ class DefaultUserService: UserServiceGrpc.UserServiceImplBase() {
 
     override fun findById(request: UserId, responseObserver: StreamObserver<com.ndgndg91.grpc.stub.user.User>) {
         log.info("$request")
-        // TODO : Exception 구체화 및 Advisor
-        val user = users[request.id] ?: throw RuntimeException()
+        val user = users[request.id] ?: throw UserNotFoundException("can not find by ${request.id}")
 
         val userResponse = com.ndgndg91.grpc.stub.user.User.newBuilder()
             .setId(user.id.toString())

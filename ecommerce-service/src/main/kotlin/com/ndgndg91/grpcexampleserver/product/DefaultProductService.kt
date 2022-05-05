@@ -4,17 +4,55 @@ import com.ndgndg91.grpc.stub.product.CreateProductRequest
 import com.ndgndg91.grpc.stub.product.Product
 import com.ndgndg91.grpc.stub.product.ProductID
 import com.ndgndg91.grpc.stub.product.ProductServiceGrpc
+import com.ndgndg91.grpcexampleserver.user.DefaultUserService
 import io.grpc.stub.StreamObserver
 import net.devh.boot.grpc.server.service.GrpcService
+import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 @GrpcService
-class DefaultProductService: ProductServiceGrpc.ProductServiceImplBase() {
+class DefaultProductService: ProductServiceGrpc.ProductServiceImplBase() {companion object {
+    private val log = LoggerFactory.getLogger(DefaultUserService::class.java)
+    // TODO : repository layer
+    private val products = ConcurrentHashMap<String, com.ndgndg91.grpcexampleserver.product.Product>()
+}
 
-    override fun addProduct(request: CreateProductRequest?, responseObserver: StreamObserver<ProductID>?) {
-        super.addProduct(request, responseObserver)
+    override fun createProduct(request: CreateProductRequest, responseObserver: StreamObserver<ProductID>) {
+        log.info("$request")
+        val id = UUID.randomUUID()
+
+        products[id.toString()] = Product(
+            id,
+            request.name,
+            request.description,
+            request.price.toBigInteger(),
+            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toBigInteger()
+        )
+
+        val productID = ProductID.newBuilder()
+            .setId(id.toString())
+            .build()
+        responseObserver.onNext(productID)
+        responseObserver.onCompleted()
     }
 
-    override fun getProduct(request: ProductID?, responseObserver: StreamObserver<Product>?) {
-        super.getProduct(request, responseObserver)
+    override fun findById(request: ProductID, responseObserver: StreamObserver<Product>) {
+        log.info("$request")
+
+        val product = products[request.id]?: throw ProductNotFoundException("can not find product by ${request.id}")
+
+        val response = Product.newBuilder()
+            .setId(product.id.toString())
+            .setName(product.name)
+            .setDescription(product.description)
+            .setPrice(product.price.toLong())
+            .setCreatedAt(product.createdAt.toLong())
+            .build()
+
+        responseObserver.onNext(response)
+        responseObserver.onCompleted()
     }
 }
