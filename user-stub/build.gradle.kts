@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.google.protobuf.gradle.*
 
 plugins {
@@ -13,7 +12,7 @@ plugins {
 
 }
 
-val grpcVersion = "1.36.0" // CURRENT_GRPC_VERSION
+val grpcVersion = "1.46.0"
 val protobufVersion = "3.14.0"
 val grpcKotlinVersion = "1.2.1"
 

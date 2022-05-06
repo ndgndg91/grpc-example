@@ -2,7 +2,7 @@ package com.ndgndg91.grpcexampleserver.product
 
 import com.ndgndg91.grpc.stub.product.CreateProductRequest
 import com.ndgndg91.grpc.stub.product.Product
-import com.ndgndg91.grpc.stub.product.ProductID
+import com.ndgndg91.grpc.stub.product.ProductId
 import com.ndgndg91.grpc.stub.product.ProductServiceGrpc
 import com.ndgndg91.grpcexampleserver.user.DefaultUserService
 import io.grpc.stub.StreamObserver
@@ -10,7 +10,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @GrpcService
@@ -20,7 +20,7 @@ class DefaultProductService: ProductServiceGrpc.ProductServiceImplBase() {compan
     private val products = ConcurrentHashMap<String, com.ndgndg91.grpcexampleserver.product.Product>()
 }
 
-    override fun createProduct(request: CreateProductRequest, responseObserver: StreamObserver<ProductID>) {
+    override fun createProduct(request: CreateProductRequest, responseObserver: StreamObserver<ProductId>) {
         log.info("$request")
         val id = UUID.randomUUID()
 
@@ -32,14 +32,14 @@ class DefaultProductService: ProductServiceGrpc.ProductServiceImplBase() {compan
             LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toBigInteger()
         )
 
-        val productID = ProductID.newBuilder()
+        val productID = ProductId.newBuilder()
             .setId(id.toString())
             .build()
         responseObserver.onNext(productID)
         responseObserver.onCompleted()
     }
 
-    override fun findById(request: ProductID, responseObserver: StreamObserver<Product>) {
+    override fun findById(request: ProductId, responseObserver: StreamObserver<Product>) {
         log.info("$request")
 
         val product = products[request.id]?: throw ProductNotFoundException("can not find product by ${request.id}")
