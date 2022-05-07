@@ -1,5 +1,6 @@
 package com.ndgndg91.grpcexampleclient.user
 
+import com.ndgndg91.grpcexampleclient.common.ApiResponse
 import com.ndgndg91.grpcexampleclient.config.EcommerceClient
 import com.ndgndg91.grpcexampleclient.ext.toOkResponseEntity
 import com.ndgndg91.grpcexampleclient.user.dto.CreateUserHttpRequest
@@ -22,9 +23,7 @@ class UserController(val ecommerceClient: EcommerceClient) {
     }
 
     @GetMapping("/api/users/{id}")
-    suspend fun findUserById(@PathVariable id: String): ResponseEntity<UserHttpResponse> {
-        return ecommerceClient.findUserById(id).let {
-            UserHttpResponse(it.id, it.email, it.fullName, it.createdAt.toBigInteger())
-        }.toOkResponseEntity()
+    suspend fun findUserById(@PathVariable id: String): ResponseEntity<ApiResponse<UserHttpResponse>> {
+        return UserHttpResponse(ecommerceClient.findUserById(id)).toOkResponseEntity()
     }
 }

@@ -8,6 +8,7 @@ import com.ndgndg91.grpc.stub.user.CreateUserRequest
 import com.ndgndg91.grpc.stub.user.User
 import com.ndgndg91.grpc.stub.user.UserId
 import com.ndgndg91.grpc.stub.user.UserServiceGrpcKt
+import com.ndgndg91.grpcexampleclient.exception.ProductNotFoundException
 import com.ndgndg91.grpcexampleclient.exception.UserNotFoundException
 import io.grpc.ManagedChannel
 import io.grpc.StatusException
@@ -60,8 +61,13 @@ class EcommerceClient(private val channel: ManagedChannel): Closeable {
     }
 
     suspend fun findProductById(id: String): Product {
-        val productId = ProductId.newBuilder().setId(id).build()
-        return productStub.findById(productId)
+        try {
+            val productId = ProductId.newBuilder().setId(id).build()
+            return productStub.findById(productId)
+        } catch (e: StatusException) {
+            log.error("failed to find product by $id", e)
+            throw ProductNotFoundException(e.status, e.message)
+        }
     }
 
 

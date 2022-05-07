@@ -1,10 +1,11 @@
 package com.ndgndg91.grpcexampleclient.product
 
+import com.ndgndg91.grpcexampleclient.common.ApiResponse
 import com.ndgndg91.grpcexampleclient.config.EcommerceClient
 import com.ndgndg91.grpcexampleclient.ext.toCreatedResponseEntity
 import com.ndgndg91.grpcexampleclient.ext.toOkResponseEntity
 import com.ndgndg91.grpcexampleclient.product.dto.CreateProductHttpRequest
-import com.ndgndg91.grpcexampleclient.product.dto.ProductResponse
+import com.ndgndg91.grpcexampleclient.product.dto.ProductHttpResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
@@ -20,7 +21,7 @@ class ProductController(private val ecommerceClient: EcommerceClient){
     }
 
     @GetMapping("/api/products/{id}")
-    suspend fun findProductById(@PathVariable id: String): ResponseEntity<ProductResponse> {
-        return ProductResponse(ecommerceClient.findProductById(id)).toOkResponseEntity()
+    suspend fun findProductById(@PathVariable id: String): ResponseEntity<ApiResponse<ProductHttpResponse>> {
+        return ProductHttpResponse(ecommerceClient.findProductById(id)).toOkResponseEntity()
     }
 }
