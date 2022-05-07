@@ -1,28 +1,26 @@
 package com.ndgndg91.grpcexampleclient.product
 
 import com.ndgndg91.grpcexampleclient.config.EcommerceClient
+import com.ndgndg91.grpcexampleclient.ext.toCreatedResponseEntity
+import com.ndgndg91.grpcexampleclient.ext.toOkResponseEntity
 import com.ndgndg91.grpcexampleclient.product.dto.CreateProductHttpRequest
+import com.ndgndg91.grpcexampleclient.product.dto.ProductResponse
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
 class ProductController(private val ecommerceClient: EcommerceClient){
 
-    // TODO : implementation
     @PostMapping("/api/products")
-    fun createProduct(@RequestBody request: CreateProductHttpRequest): ResponseEntity<Unit> {
-        val id = ""
-        return ResponseEntity.created(URI.create("/api/products/$id")).build()
+    suspend fun createProduct(@RequestBody request: CreateProductHttpRequest): ResponseEntity<Unit> {
+        return ecommerceClient.createProduct(request.name, request.description, request.price).let {
+            URI.create("/api/products/${it.id}")
+        }.toCreatedResponseEntity()
     }
 
-    // TODO : implementation
     @GetMapping("/api/products/{id}")
-    fun findProductById(@PathVariable id: String): ResponseEntity<*> {
-        return ResponseEntity.ok(null)
+    suspend fun findProductById(@PathVariable id: String): ResponseEntity<ProductResponse> {
+        return ProductResponse(ecommerceClient.findProductById(id)).toOkResponseEntity()
     }
 }
